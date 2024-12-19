@@ -35,6 +35,18 @@ Copy the prometheus.yml file from this repo to /opt/monitoring/prometheus/promet
 #	DC2
       - [NEW switch2 IP]       # second switch RU12
 ```
+6. Need to enable the SNMP support on the Juniper switches:
+```
+set snmp community public
+```
+If you are using filtered access to the management interface, you must also explicitly enable SNMP access from the SNMP Exporter host:
+```
+set firewall family inet filter MGMT_ACCESS term SNMP from source-address 10.10.1.12/32
+set firewall family inet filter MGMT_ACCESS term SNMP from protocol udp
+set firewall family inet filter MGMT_ACCESS term SNMP from destination-port 161
+set firewall family inet filter MGMT_ACCESS term SNMP then count
+set firewall family inet filter MGMT_ACCESS term SNMP then accept
+```
 
 # Running
 
@@ -44,11 +56,11 @@ cd /opt/monitoring
 ```
 2. Run the docker-compose stack with `docker compose up -d`
 
-3. Open in the Web browser http://[node IP]:3000 and login with admin/admin
+3. Open in the Web browser http://[docker node IP]:3000 and login with admin/admin
 
 # Please note
 
-1. Prometheus is running on port 9990
+1. Prometheus is running on port 9990/targets
 2. Grafana is running on port 3000
 3. SNMP Exporter is running on port 9116
 4. Node Exporter is running on port 9100
