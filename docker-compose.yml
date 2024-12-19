@@ -1,17 +1,17 @@
 # Docker compose file for the SNMP Prometheus + Grafana monitoring
-# v.1.2
+# v.1.3
 # Prometheuse URL:    [IP]:9090/targets
 # Node exportter URL: [IP]:9100
 # SNMP exporter URL:  [IP]:9116
 # 
-# Denis Chertkov, denis@chertkov.info, 20241215
+# Denis Chertkov, denis@chertkov.info, 20241219
 
 services:
 
   prometheus:
     image: prom/prometheus:latest
     volumes:
-      - ./prometheus:/etc/prometheus/
+      - /opt/monitoring/prometheus:/etc/prometheus/
     container_name: prometheus
     hostname: prometheus
     command:
@@ -54,8 +54,8 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./grafana:/var/lib/grafana
-      - ./grafana/provisioning/:/etc/grafana/provisioning/
+      - /opt/monitoring/grafana:/var/lib/grafana
+      - /opt/monitoring/grafana/provisioning/:/etc/grafana/provisioning/
     container_name: grafana
     hostname: grafana
     restart: unless-stopped
@@ -80,5 +80,5 @@ networks:
   default:
     ipam:
       driver: default
-      config:
-        - subnet: 172.29.0.0/16
+      # config:
+      #   - subnet: 172.29.0.0/16
